@@ -1,14 +1,16 @@
 # テーブル設計
 
 # usersテーブル
-| Column             | Type   | Options                   |
-| ------------------ | ------ | ------------------------- |
-| nickname           | string | null , false              |
-| email              | string | unique: true              |
-| password           | string | null , false, default: "" |
-| encrypted_password | string | null , false, default: "" |
-| name               | string | null , false              |
-| birthday           | string | null , false              |
+| Column          | Type   | Options                   |
+| --------------- | ------ | ------------------------- |
+| nickname        | string | null , false              |
+| email           | string | unique: true              |
+| password        | string | null , false, default: "" |
+| last_name       | string | null , false              |
+| first_name      | string | null , false              |
+| last_name_kana  | string | null , false              |
+| first_name_kana | string | null , false              |
+| birth_date      | date   | null , false              |
 
 # Association
 - has_many :products
@@ -18,33 +20,31 @@
 | Column               | Type      | Options                         |
 | -------------------- | --------- | ------------------------------- |
 | product_name         | string    | null , false                    |
-| category             | string    | null , false                    |
+| category_id          | integer   | null , false                    |
 | price                | integer   | null , false                    |
 | product_introduction | text      | null , false                    |
-| product_condition    | string    | null , false                    |
+| product_condition_id | integer   | null , false                    |
 | postage              | string    | null , false                    |
-| shipping_area        | string    | null , false                    |
+| prefecture           | string    | null , false                    |
 | day_to_ship          | string    | null , false                    |
 | name_id              | reference | null , false ,foreign_key: true |
 
 # Association
-- belongs_to :users
+- belongs_to :user
 - has_one :purchase_records
 
 # purchase_records（購入記録）テーブル
 | Column           | Type      | Options                         |
 | ---------------- | --------- | ------------------------------- |
-| purchase_name    | string    | null , false                    |
-| purchase_product | string    | null , false                    |
 | user_id          | reference | null , false ,foreign_key: true |
 | product_id       | reference | null , false ,foreign_key: true |
 
 # Association
-- belongs_to :users
-- belongs_to :products
+- belongs_to :user
+- belongs_to :product
 - has_one :shipping_information
 
-# shipping_information（配送先）テーブル
+# shipping_records（配送先）テーブル
 | Column             | Type      | Options                         |
 | ------------------ | --------- | ------------------------------- |
 | postal_code        | string    | null , false                    |
@@ -55,6 +55,5 @@
 | phone_number       | integer   | null , false                    |
 | purchase_record_id | reference | null , false ,foreign_key: true |
 
-
 # Association
-- belongs_to :purchase_records
+- belongs_to :purchase_record
