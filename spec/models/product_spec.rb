@@ -12,14 +12,30 @@ RSpec.describe Product, type: :model do
         @product.save
         expect(@product).to be_valid
       end
-
+      
       it 'priceは半角数字かつ¥300~¥9,999,999の範囲内であれば登録することができる' do
-        @product.price = 9999999
+        @product.price = 9_999_999
+        expect(@product).to be_valid
+      end
+
+      it 'priceが¥300であれば登録することができる' do
+        @product.price = 300
+        expect(@product).to be_valid
+      end
+
+      it 'priceが¥9,999,999円であれば登録することができる' do
+        @product.price = 9_999_999
         expect(@product).to be_valid
       end
     end
-
+    
     context "商品出品ができないとき" do
+      it 'imageが空では出品できない' do
+        @product.image = nil
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Image can't be blank")
+      end
+
       it 'nameが空だと出品できない' do
         @product.name = ''
         @product.valid?
@@ -68,22 +84,64 @@ RSpec.describe Product, type: :model do
         expect(@product.errors.full_messages).to include("Price is invalid")
       end
 
-      it 'priceは¥300~¥9,999,999以外は登録できない' do
+      it 'category_idが1では登録できない' do
+        @product.category_id = 1
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Category must be other than 1")
+      end
+
+      it 'condition_idが1では登録できない' do
+        @product.condition_id = 1
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Condition must be other than 1")
+      end
+
+      it 'postage_idが1では登録できない' do
+        @product.postage_id = 1
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Postage must be other than 1")
+      end
+
+      it 'prefecture_idが1では登録できない' do
+        @product.prefecture_id = 1
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Prefecture must be other than 1")
+      end
+
+      it 'day_idが1では登録できない' do
+        @product.day_id = 1
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Day must be other than 1")
+      end
+
+      it 'priceは¥300~¥9,999,999以外(例:¥100)は登録できない' do
         @product.price = 100
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Price is not included in the list")
+      end
+
+      it 'priceは¥300~¥9,999,999以外(例:¥30,000,000)は登録できない' do
+        @product.price = 30_000_000
         @product.valid?
         expect(@product.errors.full_messages).to include("Price is not included in the list")
       end
       
       it 'priceは全角数字では登録できない' do
-        @product.price = '１０００'
+        @product.price = '１_０００'
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Price is not included in the list")
+      end
+
+      it 'priceは半角英語では登録できない' do
+        @product.price = 'senyen'
         @product.valid?
         expect(@product.errors.full_messages).to include("Price is not included in the list")
       end
       
-      it 'imageが空では出品できない' do
-        @product.image = nil
+      it 'priceは半角英数混合では登録できない' do
+        @product.price = '10_000yen'
         @product.valid?
-        expect(@product.errors.full_messages).to include("Image can't be blank")
+        expect(@product.errors.full_messages).to include("Price is not a number")
       end
     end
     
