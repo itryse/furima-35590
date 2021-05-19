@@ -8,8 +8,13 @@ RSpec.describe Product, type: :model do
   describe '商品出品機能' do
 
     context "商品出品ができるとき" do
-      it '全ての情報が記入されていれば登録することができる' do
+      it '全ての情報が記入されていれば出品することができる' do
         @product.save
+        expect(@product).to be_valid
+      end
+
+      it 'priceは半角数字かつ¥300~¥9,999,999の範囲内であれば登録することができる' do
+        @product.price = 9999999
         expect(@product).to be_valid
       end
     end
@@ -60,24 +65,28 @@ RSpec.describe Product, type: :model do
       it 'priceが空だと出品できない' do
         @product.price = ''
         @product.valid?
-        expect(@product.errors.full_messages).to include("Price can't be blank")
+        expect(@product.errors.full_messages).to include("Price is invalid")
       end
 
+      it 'priceは¥300~¥9,999,999以外は登録できない' do
+        @product.price = 100
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Price is not included in the list")
+      end
+      
+      it 'priceは全角数字では登録できない' do
+        @product.price = '１０００'
+        @product.valid?
+        expect(@product.errors.full_messages).to include("Price is not included in the list")
+      end
+      
       it 'imageが空では出品できない' do
         @product.image = nil
         @product.valid?
         expect(@product.errors.full_messages).to include("Image can't be blank")
       end
-
-      # it 'priceは¥300~¥9,999,999以外は登録できない' do
-      # end
-
-      # it 'priceは半角数字のみ登録できる' do
-      # end
-
-      # it 'ログインユーザーでなければ出品できない' do
-      # end
-
     end
+    
   end
+
 end

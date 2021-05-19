@@ -12,7 +12,7 @@ class Product < ApplicationRecord
   validates :image, presence: true
   validates :name, presence: true
   validates :introduction, presence: true
-  validates :price, presence: true
+  validates :price, inclusion: { in: 300..9_999_999 }, format: { with: /\A[0-9]+\z/ }
 
   with_options numericality: { other_than: 1 } do
     validates :category_id
