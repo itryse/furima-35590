@@ -23,7 +23,7 @@ RSpec.describe Product, type: :model do
         expect(@product).to be_valid
       end
 
-      it 'priceが¥9,999,999円であれば登録することができる' do
+      it 'priceが¥9,999,999であれば登録することができる' do
         @product.price = 9_999_999
         expect(@product).to be_valid
       end
