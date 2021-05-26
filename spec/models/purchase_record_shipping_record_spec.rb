@@ -11,7 +11,7 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
     end
 
     context '内容に問題ない場合' do
-      
+
       it 'すべての値が正しく入力されていれば保存できること' do
         expect(@purchase_record_shipping_record).to be_valid
       end
@@ -45,7 +45,6 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
       it 'cityを選択していないと保存できないこと' do
         @purchase_record_shipping_record.city = ''
         @purchase_record_shipping_record.valid?
-        binding.pry
         expect(@purchase_record_shipping_record.errors.full_messages).to include("City can't be blank")
       end
 
@@ -59,6 +58,18 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
         @purchase_record_shipping_record.phone_number = '080111122223'
         @purchase_record_shipping_record.valid?
         expect(@purchase_record_shipping_record.errors.full_messages).to include("Phone number is invalid")
+      end
+
+      it 'userと紐づいていないと登録できないこと' do
+        @purchase_record_shipping_record.user_id = nil
+        @purchase_record_shipping_record.valid?
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("User can't be blank")
+      end
+
+      it 'productと紐づいていないと登録できないこと' do
+        @purchase_record_shipping_record.product_id = nil
+        @purchase_record_shipping_record.valid?
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("Product can't be blank")
       end
 
     end
