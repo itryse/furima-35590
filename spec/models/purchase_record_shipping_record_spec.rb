@@ -67,6 +67,18 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
         expect(@purchase_record_shipping_record.errors.full_messages).to include("Phone number is invalid")
       end
 
+      it 'phone_numberが半角英数字混合だと登録できないこと' do
+        @purchase_record_shipping_record.phone_number = '080ABCD1234'
+        @purchase_record_shipping_record.valid?
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("Phone number is invalid")
+      end
+
+      it 'phone_numberが全角数字だと登録できないこと' do
+        @purchase_record_shipping_record.phone_number = '０８０１２３４５６７８'
+        @purchase_record_shipping_record.valid?
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("Phone number is invalid")
+      end
+
       it 'userと紐づいていないと登録できないこと' do
         @purchase_record_shipping_record.user_id = nil
         @purchase_record_shipping_record.valid?

@@ -3,6 +3,7 @@ class PurchaseRecordsController < ApplicationController
   before_action :go_to_index, only: [:index, :create]
   before_action :back_to_index, only: [:index, :create]
   before_action :set_method, only: [:index, :create]
+  before_action :pay_pay, only: [:create]
 
   def index
     @purchase_record_shipping_record = PurchaseRecordShippingRecord.new
@@ -11,12 +12,6 @@ class PurchaseRecordsController < ApplicationController
   def create
     @purchase_record_shipping_record = PurchaseRecordShippingRecord.new(purchase_record_params)
     if @purchase_record_shipping_record.valid?
-      Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
-      Payjp::Charge.create(
-        amount: @product.price,
-        card: purchase_record_params[:token],
-        currency: 'jpy'
-      )
       @purchase_record_shipping_record.save
       redirect_to root_path
     else
@@ -46,6 +41,15 @@ class PurchaseRecordsController < ApplicationController
 
   def set_method
     @product = Product.find(params[:product_id])
+  end
+
+  def pay_pay
+    Payjp.api_key = ENV["PAYJP_SECRET_KEY"]
+      Payjp::Charge.create(
+        amount: @product.price,
+        card: purchase_record_params[:token],
+        currency: 'jpy'
+      )
   end
 
 end
