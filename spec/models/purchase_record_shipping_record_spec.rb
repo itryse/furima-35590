@@ -44,9 +44,9 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
       end
 
       it 'prefectureを1と選択された場合は購入できないこと' do
-        @purchase_record_shipping_record.prefecture_id = ''
+        @purchase_record_shipping_record.prefecture_id = 1
         @purchase_record_shipping_record.valid?
-        expect(@purchase_record_shipping_record.errors.full_messages).to include("Prefecture is not a number")
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("Prefecture must be other than 1")
       end
 
       it 'cityを選択していないと保存できないこと' do
