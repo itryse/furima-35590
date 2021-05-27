@@ -1,7 +1,8 @@
 class ProductsController < ApplicationController
   before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
-  before_action :move_to_index, only: [:edit, :update, :destroy]
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  before_action :move_to_index, only: [:edit, :update, :destroy]
+  before_action :jamp_to_index, only: [:edit, :update, :destroy]
 
   def index
     @products = Product.all.order("created_at DESC")
@@ -46,13 +47,19 @@ class ProductsController < ApplicationController
   end
 
   def move_to_index
-    @product = Product.find(params[:id])
     if current_user != @product.user
-      redirect_to action: :index
+      redirect_to root_path
     end
   end
 
   def set_product
     @product = Product.find(params[:id])
   end
+
+  def jamp_to_index
+    if @product.purchase_record.present?
+      redirect_to root_path
+    end
+  end
+
 end
