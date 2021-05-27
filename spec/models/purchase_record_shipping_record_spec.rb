@@ -20,6 +20,7 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
         @purchase_record_shipping_record.building_name = ''
         expect(@purchase_record_shipping_record).to be_valid
       end
+      
     end
 
     context '内容に問題がある場合' do
@@ -70,6 +71,12 @@ RSpec.describe PurchaseRecordShippingRecord, type: :model do
         @purchase_record_shipping_record.product_id = nil
         @purchase_record_shipping_record.valid?
         expect(@purchase_record_shipping_record.errors.full_messages).to include("Product can't be blank")
+      end
+
+      it 'tokenが空だと保存できないこと' do
+        @purchase_record_shipping_record.token = ''
+        @purchase_record_shipping_record.valid?
+        expect(@purchase_record_shipping_record.errors.full_messages).to include("Token can't be blank")
       end
 
     end
