@@ -1,8 +1,8 @@
 class PurchaseRecordsController < ApplicationController
   before_action :authenticate_user!, only: [:index, :create]
+  before_action :set_method, only: [:index, :create]
   before_action :go_to_index, only: [:index, :create]
   before_action :back_to_index, only: [:index, :create]
-  before_action :set_method, only: [:index, :create]
 
   def index
     @purchase_record_shipping_record = PurchaseRecordShippingRecord.new
@@ -26,14 +26,12 @@ class PurchaseRecordsController < ApplicationController
   end
 
   def go_to_index
-    @product = Product.find(params[:product_id])
     if current_user == @product.user
       redirect_to root_path
     end
   end
 
   def back_to_index
-    @product = Product.find(params[:product_id])
     if @product.purchase_record.present?
       redirect_to root_path
     end
